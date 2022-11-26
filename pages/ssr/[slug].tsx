@@ -13,6 +13,20 @@ const client = sanityClient({
   useCdn: true,
 });
 
+type Page = {
+  _createdAt: string;
+  _id: string;
+  _rev: string;
+  _type: "page";
+  _updatedAt: string;
+  body: string;
+  slug: {
+    _type: "slug";
+    current: string;
+  };
+  title: string;
+};
+
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext<{ slug: string }>
 ) {
@@ -24,11 +38,17 @@ export async function getServerSideProps(
     };
   }
   // Fetch page data from Sanity.
-  const page = await client.fetch(
+  const page = (await client.fetch(
     // Since dataset is private, we don't need to check for published documents.
     `*[_type == "page" && slug.current == $slug][0]`,
     { slug: ctx.params.slug }
-  );
+  )) as Page | null;
+  // If there is no page, show a 404 page
+  if (!page) {
+    return {
+      notFound: true,
+    };
+  }
   // Return the page data as props
   return {
     props: {
@@ -38,7 +58,7 @@ export async function getServerSideProps(
   };
 }
 
-export default function Page(
+export default function SSRPage(
   // Infer page props type from the return value of getServerSideProps
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
@@ -48,6 +68,7 @@ export default function Page(
   return (
     <main>
       <h1>{props.page.title}</h1>
+      <p>{props.page.body}</p>
       <footer>
         Published at: <time>{updatedAt}</time>
         <br />

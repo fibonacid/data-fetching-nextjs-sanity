@@ -16,5 +16,10 @@ export default {
         source: "title",
       },
     },
+    {
+      name: "body",
+      title: "Body",
+      type: "text",
+    },
   ],
 };
