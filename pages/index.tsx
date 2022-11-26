@@ -20,6 +20,9 @@ export default function Home() {
         <li>
           <Link href="/e2e-swr/home">End-to-End SWR</Link>
         </li>
+        <li>
+          <Link href="/eager-e2e-swr/home">Eager E2E SWR</Link>
+        </li>
       </ul>
     </main>
   );

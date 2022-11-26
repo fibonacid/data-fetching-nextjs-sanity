@@ -3,6 +3,7 @@ import type { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { Page } from "../../types";
 import useSWR from "swr";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 // Configure Sanity client
 const client = sanityClient({
@@ -53,33 +54,41 @@ export async function getStaticProps(
 }
 
 export async function getStaticPaths() {
-  // Fetch all pages from Sanity
-  const pages = (await client.fetch(
-    `*[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]`
-  )) as Page[];
-  // Return the paths as an array of strings
   return {
-    paths: pages.map((page) => ({ params: { slug: page.slug.current } })),
-    // Fallback: blocking means that if a page is not in the paths array, it will be generated on the fly.
-    fallback: "blocking",
+    // To demonstrate the fallback behavior, we don't return any paths here.
+    paths: [],
+    // Fallback: true means that pages that don't exist yet will generated in the background
+    fallback: true,
   };
 }
 
-export default function CSRPage(
-  // Infer page props type from the return value of getServerSideProps
-  props: InferGetStaticPropsType<typeof getStaticProps>
+export default function EagerE2ESWR(
+  // Infer page props type from the return value of getStaticProps
+  // ⚠️ Since we use fallback: true, the page props might be undefined.
+  props: Partial<InferGetStaticPropsType<typeof getStaticProps>>
 ) {
+  const { query, isFallback } = useRouter();
+
+  const slug = isFallback
+    ? // If the page is still generating, use the slug from the URL
+      Array.isArray(query.slug)
+      ? query.slug[0]
+      : query.slug
+    : // If the page is generated, use the slug from props
+      props.page?.slug.current;
+
   // Refetch the page data on the client
   const {
     data: page,
     isValidating,
     error,
-  } = useSWR(props.page.slug.current, getPageBySlug, {
-    fallbackData: props.page,
+  } = useSWR(slug, getPageBySlug, {
+    // Pass the initial data only if it's not a fallback page.
+    fallbackData: isFallback ? null : props.page,
   });
 
   if (page) {
-    const generatedAt = new Date(props.timestamp).toLocaleString();
+    const generatedAt = new Date().toLocaleString();
     const updatedAt = new Date(page._updatedAt).toLocaleString();
 
     return (
@@ -95,8 +104,11 @@ export default function CSRPage(
         </footer>
       </main>
     );
+  } else if (error) {
+    // Show error message if there is an error and no page data
+    return <p>Error: {error.message}</p>;
   } else {
-    // This won't happen because we are using fallback: "blocking"
+    // This will happen when the page has never been generated before
     return <p>Loading...</p>;
   }
 }
