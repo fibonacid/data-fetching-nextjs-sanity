@@ -33,6 +33,7 @@ export async function getServerSideProps(
   return {
     props: {
       page,
+      timestamp: new Date().toISOString(),
     },
   };
 }
@@ -41,9 +42,17 @@ export default function Page(
   // Infer page props type from the return value of getServerSideProps
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+  const generatedAt = new Date(props.timestamp).toLocaleString();
+  const updatedAt = new Date(props.page._updatedAt).toLocaleString();
+
   return (
     <main>
       <h1>{props.page.title}</h1>
+      <footer>
+        Generated at: <time>{generatedAt}</time>
+        <br />
+        Published at: <time>{updatedAt}</time>
+      </footer>
     </main>
   );
 }
