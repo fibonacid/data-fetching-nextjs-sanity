@@ -6,6 +6,7 @@ import { Page } from "../../types";
 const client = sanityClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  apiVersion: "2022-11-26",
   // Since we are using getStaticProps, using the CDN is redundant, therefore we disable it.
   useCdn: false,
   // Since we don't rely on the CDN, the dataset can be private.

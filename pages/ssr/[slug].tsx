@@ -9,6 +9,7 @@ import { Page } from "../../types";
 const client = sanityClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  apiVersion: "2022-11-26",
   // Since we are using getServerSideProps, using the CDN will save us money.
   // ⚠️ Using the CDN will require the dataset to be public.
   useCdn: true,
