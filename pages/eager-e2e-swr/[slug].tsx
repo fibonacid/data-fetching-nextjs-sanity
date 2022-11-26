@@ -1,9 +1,8 @@
 import sanityClient from "@sanity/client";
 import type { GetStaticPropsContext, InferGetStaticPropsType } from "next";
-import { Page } from "../../types";
-import useSWR from "swr";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
+import useSWR from "swr";
+import { Page } from "../../types";
 
 // Configure Sanity client
 const client = sanityClient({
