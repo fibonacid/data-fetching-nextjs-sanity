@@ -12,16 +12,13 @@ export default function Home() {
       </p>
       <ul>
         <li>
-          <Link href="/ssr/home">Server Side Rendering (SSR)</Link>
+          <Link href="/ssr/home">Server Rendering</Link>
         </li>
         <li>
-          <Link href="/isr/home">Incremental Static Regeneration (ISR)</Link>
+          <Link href="/server-swr/home">Server SWR</Link>
         </li>
         <li>
-          <Link href="/od-isr/home">On-Demand ISR</Link>
-        </li>
-        <li>
-          <Link href="/isr-swr/home">ISR + Stale While Revalidate (SWR)</Link>
+          <Link href="/e2e-swr/home">End-to-End SWR</Link>
         </li>
       </ul>
     </main>
