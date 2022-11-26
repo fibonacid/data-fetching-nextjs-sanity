@@ -88,7 +88,9 @@ export default function EagerE2ESWR(
   });
 
   if (page) {
-    const generatedAt = new Date().toLocaleString();
+    const generatedAt = (
+      props.timestamp ? new Date(props.timestamp) : new Date()
+    ).toLocaleString();
     const updatedAt = new Date(page._updatedAt).toLocaleString();
 
     return (
