@@ -49,9 +49,9 @@ export default function Page(
     <main>
       <h1>{props.page.title}</h1>
       <footer>
-        Generated at: <time>{generatedAt}</time>
-        <br />
         Published at: <time>{updatedAt}</time>
+        <br />
+        Generated at: <time>{generatedAt}</time>
       </footer>
     </main>
   );
