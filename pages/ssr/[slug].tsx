@@ -3,6 +3,7 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 import sanityClient from "@sanity/client";
+import { Page } from "../../types";
 
 // Configure Sanity client
 const client = sanityClient({
@@ -12,20 +13,6 @@ const client = sanityClient({
   // ⚠️ Using the CDN will require the dataset to be public.
   useCdn: true,
 });
-
-type Page = {
-  _createdAt: string;
-  _id: string;
-  _rev: string;
-  _type: "page";
-  _updatedAt: string;
-  body: string;
-  slug: {
-    _type: "slug";
-    current: string;
-  };
-  title: string;
-};
 
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext<{ slug: string }>
